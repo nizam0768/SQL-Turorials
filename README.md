@@ -12,6 +12,7 @@ Use the links below to jump directly to each answer.
 3. [What are Keys in SQL?](#-what-are-keys-in-sql)
 4. [What is Normalization in SQL?](#what-is-normalization-in-sql)
 5. [What is Denormalization, and When is it Used?](#what-is-denormalization-and-when-is-it-used)
+6. [What are the Different Operators Available in SQL?](#what-are-the-different-operators-available-in-sql)
 
 ---
 
@@ -386,4 +387,113 @@ Suppose we have normalized tables:
 - Now queries can fetch **order and customer info from a single table** without joins.  
 
 ---
+
+### What are the Different Operators Available in SQL?
+
+SQL operators allow you to perform operations on data. They can be broadly categorized as follows:
+
+---
+
+#### 1. Arithmetic Operators
+Used for mathematical calculations:
+
+| Operator | Description               | Example         |
+|----------|---------------------------|----------------|
+| `+`      | Addition                  | `SELECT 5 + 3;` |
+| `-`      | Subtraction               | `SELECT 5 - 3;` |
+| `*`      | Multiplication            | `SELECT 5 * 3;` |
+| `/`      | Division                  | `SELECT 5 / 3;` |
+| `%`      | Modulus (remainder)       | `SELECT 5 % 3;` |
+
+---
+
+#### 2. Comparison Operators
+Used to compare values:
+
+| Operator | Description                  | Example                      |
+|----------|------------------------------|------------------------------|
+| `=`      | Equal to                     | `WHERE Age = 25`             |
+| `!=` or `<>` | Not equal to               | `WHERE Age != 25`            |
+| `>`      | Greater than                 | `WHERE Salary > 5000`        |
+| `<`      | Less than                    | `WHERE Salary < 5000`        |
+| `>=`     | Greater than or equal to     | `WHERE Salary >= 5000`       |
+| `<=`     | Less than or equal to        | `WHERE Salary <= 5000`       |
+
+---
+
+#### 3. Logical Operators
+Combine multiple conditions:
+
+| Operator | Description                   | Example                          |
+|----------|-------------------------------|----------------------------------|
+| `AND`    | True if both conditions true  | `WHERE Age > 20 AND Salary > 5000` |
+| `OR`     | True if any condition true    | `WHERE Age > 20 OR Salary > 5000`  |
+| `NOT`    | Negates a condition           | `WHERE NOT Age = 25`               |
+
+---
+
+#### 4. Bitwise Operators
+Operate on bits of numeric values (DBMS dependent):
+
+| Operator | Description                  | Example             |
+|----------|------------------------------|-------------------|
+| `&`      | Bitwise AND                  | `SELECT 5 & 3;`   |
+| `|`      | Bitwise OR                   | `SELECT 5 | 3;`   |
+| `^`      | Bitwise XOR                  | `SELECT 5 ^ 3;`   |
+| `~`      | Bitwise NOT                  | `SELECT ~5;`      |
+| `<<`     | Left shift                   | `SELECT 5 << 1;`  |
+| `>>`     | Right shift                  | `SELECT 5 >> 1;`  |
+
+---
+
+#### 5. Other / Special Operators
+
+- **`IN`** → Checks if a value exists in a set.  
+  ```sql
+  WHERE Country IN ('USA', 'UK', 'India');
+- **`NOT IN`** → Checks if a value does NOT exist in a set.  
+  ```sql
+  WHERE Country NOT IN ('USA', 'UK');
+- **`BETWEEN`** → Checks if a value is within a range.
+  ```sql
+  WHERE Age BETWEEN 20 AND 30;
+- **`LIKE`** → Pattern matching using % (any characters) and _ (single character).
+  ```sql
+  WHERE Name LIKE 'A%';
+- **`NOT LIKE`** → Negates pattern matching.
+  ``sql
+  WHERE Name NOT LIKE 'A%';
+- **`IS NULL / IS NOT NULL`** → Checks for null values.
+  ```sql
+  WHERE Salary IS NULL;
+  WHERE Salary IS NOT NULL;
+- **`EXISTS`** → Checks if a subquery returns any rows.
+  ```sql
+  WHERE EXISTS (SELECT * FROM Orders WHERE CustomerID = 101);
+- **`ALL / ANY / SOME`** → Compare a value with a set of values returned by a subquery.
+  ```sql
+  WHERE Salary > ALL (SELECT Salary FROM Employees WHERE DeptID = 1);
+- **`UNION / INTERSECT / MINUS / EXCEPT`** → Combine query results (set operators).
+  ```sql
+  SELECT Name FROM Employees
+  UNION
+  SELECT Name FROM Managers;
+  --Intersect: Returns only the rows that appear in both queries.
+  SELECT Name FROM Employees
+  INTERSECT
+  SELECT Name FROM Managers;
+  --MINUS/EXCEPT: Returns rows from the first query that do not appear in the second query. MINUS is used in Oracle,EXCEPT is used in SQL Server / PostgreSQL.
+  SELECT Name FROM Employees
+  EXCEPT
+  SELECT Name FROM Managers;
+- **`Concat()`** → Used to combine two or more strings into a single string.
+  ```sql
+  SELECT CONCAT(FirstName, ' ', LastName) AS FullName
+  FROM Employees;
+- **`CONVERT`** → CONVERT are used to change the data type of a value or expression in SQL.
+  ```sql
+  SELECT CONVERT(VARCHAR(10), HireDate, 103) AS HireDateString
+  FROM Employees;
+
+  
 
