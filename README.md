@@ -10,6 +10,8 @@ Use the links below to jump directly to each answer.
 1. [What are the main types of SQL commands?](#What-are-the-main-types-of-SQL-commands?)
 2. [What are the different categories of datatypes in SQL Server?](#What-are-the-different-categories-of-datatypes-in-SQL-Server?)
 3. [What are Keys in SQL?](#-what-are-keys-in-sql)
+4. [What is Normalization in SQL?](#what-is-normalization-in-sql)
+
 ---
 
 ## ❓ Questions & Answers
@@ -165,3 +167,178 @@ Keys help with:
    - Example: `(EmpID, Name)` is a Super Key, but only `EmpID` is minimal → Candidate Key.
 
 ---
+
+### What is Normalization in SQL?
+**Normalization** is the process of organizing data in a database to reduce redundancy and improve data integrity.  
+It ensures that data is stored efficiently and consistently.  
+
+**Benefits of Normalization:**
+- Eliminates redundant data  
+- Improves data integrity  
+- Simplifies maintenance  
+- Optimizes storage  
+
+**Normal Forms (Levels of Normalization) with Examples:**
+
+---
+
+#### 1. First Normal Form (1NF)
+**Rule:** Eliminate repeating groups; each column should have atomic values.  
+
+**Unnormalized Table: `Orders`**
+
+| OrderID | Customer | Products          |
+|---------|----------|-----------------|
+| 1       | Alice    | Pen, Notebook    |
+| 2       | Bob      | Pencil, Eraser   |
+
+**1NF Table:**  
+
+| OrderID | Customer | Product   |
+|---------|----------|----------|
+| 1       | Alice    | Pen      |
+| 1       | Alice    | Notebook |
+| 2       | Bob      | Pencil   |
+| 2       | Bob      | Eraser   |
+
+---
+
+#### 2. Second Normal Form (2NF)
+**Rule:** Table is in 1NF and all non-key columns fully depend on the primary key.  
+- Remove partial dependency (when a non-key attribute depends on part of a composite key).  
+
+**Example:** `OrderDetails` (after 1NF)  
+
+| OrderID | Product   | Customer | CustomerAddress |
+|---------|----------|---------|----------------|
+| 1       | Pen      | Alice   | NY             |
+| 1       | Notebook | Alice   | NY             |
+
+**2NF Tables:**  
+
+**Orders Table:**  
+
+| OrderID | Customer   | CustomerAddress |
+|---------|------------|----------------|
+| 1       | Alice      | NY             |
+| 2       | Bob        | LA             |
+
+**OrderDetails Table:**  
+
+| OrderID | Product   |
+|---------|----------|
+| 1       | Pen      |
+| 1       | Notebook |
+| 2       | Pencil   |
+| 2       | Eraser   |
+
+---
+
+#### 3. Third Normal Form (3NF)
+**Rule:** Table is in 2NF and no transitive dependency exists.  
+- Non-key columns should not depend on other non-key columns.  
+
+**Example:** `Orders` table with transitive dependency  
+
+| OrderID | Customer | CustomerCity | CityState |
+|---------|---------|--------------|-----------|
+| 1       | Alice   | NY           | NY-State  |
+
+**3NF Tables:**  
+
+**Customers Table:**  
+
+| Customer | City  |
+|----------|-------|
+| Alice    | NY    |
+| Bob      | LA    |
+
+**Cities Table:**  
+
+| City | State   |
+|------|---------|
+| NY   | NY-State|
+| LA   | LA-State|
+
+**Orders Table:**  
+
+| OrderID | Customer |
+|---------|---------|
+| 1       | Alice   |
+| 2       | Bob     |
+
+---
+
+#### 4. Boyce-Codd Normal Form (BCNF)
+**Rule:** Every determinant must be a candidate key.  
+- Removes anomalies caused by overlapping candidate keys.  
+
+**Example:** `CourseEnrollment`  
+
+| StudentID | CourseID | Instructor |
+|-----------|---------|------------|
+| 1         | C1      | John       |
+| 2         | C1      | John       |
+| 1         | C2      | Mike       |
+
+- Here, `Instructor → CourseID` violates BCNF.  
+
+**BCNF Tables:**  
+
+**CourseInstructor Table:**  
+
+| CourseID | Instructor |
+|----------|------------|
+| C1       | John       |
+| C2       | Mike       |
+
+**Enrollment Table:**  
+
+| StudentID | CourseID |
+|-----------|---------|
+| 1         | C1      |
+| 2         | C1      |
+| 1         | C2      |
+
+---
+
+#### 5. Fifth Normal Form (5NF)
+**Rule:** Table is decomposed so that it cannot be reconstructed from smaller tables without loss.  
+- Deals with **join dependencies**.  
+
+**Example:** `ProjectAssignments`  
+
+| Employee | Project | Skill       |
+|----------|---------|------------|
+| Alice    | P1      | Java       |
+| Alice    | P1      | SQL        |
+| Bob      | P1      | Java       |
+
+**5NF Tables:**  
+
+**EmployeeSkills Table:**  
+
+| Employee | Skill |
+|----------|-------|
+| Alice    | Java  |
+| Alice    | SQL   |
+| Bob      | Java  |
+
+**ProjectSkills Table:**  
+
+| Project | Skill |
+|---------|-------|
+| P1      | Java  |
+| P1      | SQL   |
+
+**ProjectAssignments Table:**  
+
+| Employee | Project |
+|----------|---------|
+| Alice    | P1      |
+| Bob      | P1      |
+
+- Now, the original table can be reconstructed by joining the three tables without redundancy.
+
+---
+
