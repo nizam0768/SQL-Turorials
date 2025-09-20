@@ -13,6 +13,7 @@ Use the links below to jump directly to each answer.
 4. [What is Normalization in SQL?](#what-is-normalization-in-sql)
 5. [What is Denormalization, and When is it Used?](#what-is-denormalization-and-when-is-it-used)
 6. [What are the Different Operators Available in SQL?](#what-are-the-different-operators-available-in-sql)
+7. [What are Function in SQL?](What-are-Function-in-SQL?)
 
 ---
 
@@ -495,5 +496,143 @@ Operate on bits of numeric values (DBMS dependent):
   SELECT CONVERT(VARCHAR(10), HireDate, 103) AS HireDateString
   FROM Employees;
 
-  
+---
+
+### What are Function in SQL?
+
+SQL functions allow you to perform operations on data and return a value. They are broadly categorized into **Aggregate Functions**, **Scalar Functions**, **Date/Time Functions**, **String Functions**, **Conversion Functions**, and **User-Defined Functions (UDFs)**.
+
+---
+
+#### 1. Aggregate Functions
+Perform calculations across multiple rows and return a single value.
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `SUM()`  | Total sum of a column | `SELECT SUM(Salary) AS TotalSalary FROM Employees;` |
+| `AVG()`  | Average value of a column | `SELECT AVG(Salary) AS AvgSalary FROM Employees;` |
+| `COUNT()`| Count rows or values | `SELECT COUNT(*) AS TotalEmployees FROM Employees;` |
+| `MIN()`  | Minimum value | `SELECT MIN(Salary) AS MinSalary FROM Employees;` |
+| `MAX()`  | Maximum value | `SELECT MAX(Salary) AS MaxSalary FROM Employees;` |
+
+---
+
+#### 2. Scalar Functions
+Operate on a single value and return a single value.
+
+**String Functions:**
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `UPPER()` | Convert string to uppercase | `SELECT UPPER(FirstName) FROM Employees;` |
+| `LOWER()` | Convert string to lowercase | `SELECT LOWER(FirstName) FROM Employees;` |
+| `LEN()` / `LENGTH()` | Get length of string | `SELECT LEN(FirstName) FROM Employees;` |
+| `CONCAT()` | Combine strings | `SELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;` |
+| `SUBSTRING()` | Extract substring | `SELECT SUBSTRING(FirstName, 1, 3) FROM Employees;` |
+| `TRIM()` | Remove leading/trailing spaces | `SELECT TRIM(FirstName) FROM Employees;` |
+
+**Numeric Functions:**
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `ROUND()` | Round a number | `SELECT ROUND(Salary, 0) FROM Employees;` |
+| `CEILING()` | Round up to nearest integer | `SELECT CEILING(Salary) FROM Employees;` |
+| `FLOOR()` | Round down to nearest integer | `SELECT FLOOR(Salary) FROM Employees;` |
+| `ABS()` | Absolute value | `SELECT ABS(-100) AS AbsValue;` |
+
+**Date/Time Functions:**
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `GETDATE()` / `NOW()` | Current date and time | `SELECT GETDATE();` |
+| `DATEADD()` | Add interval to date | `SELECT DATEADD(DAY, 7, GETDATE());` |
+| `DATEDIFF()` | Difference between dates | `SELECT DATEDIFF(DAY, '2025-01-01', GETDATE());` |
+| `YEAR()` | Extract year | `SELECT YEAR(HireDate) FROM Employees;` |
+| `MONTH()` | Extract month | `SELECT MONTH(HireDate) FROM Employees;` |
+| `DAY()` | Extract day | `SELECT DAY(HireDate) FROM Employees;` |
+
+---
+
+#### 3. Conversion Functions
+Convert one data type to another.
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `CAST()` | Convert data type | `SELECT CAST(Salary AS VARCHAR(10)) FROM Employees;` |
+| `CONVERT()` | Convert data type (SQL Server) | `SELECT CONVERT(VARCHAR(10), HireDate, 103) FROM Employees;` |
+
+---
+
+#### 4. Conditional Functions
+Perform logic-based operations.
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `COALESCE()` | Return first non-NULL value | `SELECT COALESCE(Commission, 0) FROM Employees;` |
+| `NULLIF()` | Returns NULL if values are equal | `SELECT NULLIF(Salary, 0) FROM Employees;` |
+| `CASE` | Conditional expression | `SELECT CASE WHEN Salary > 5000 THEN 'High' ELSE 'Low' END AS SalaryLevel FROM Employees;` |
+
+---
+
+#### 5. User-Defined Functions (UDF)
+A User-Defined Function is a custom function created by a user to encapsulate logic and reuse it across queries.
+- Can take parameters.
+- Must return a value (scalar or table).
+- Can be called in SELECT, WHERE, or JOIN clauses.
+- Unlike stored procedures, cannot modify data in most cases (read-only).
+
+**Types of UDFs**
+1. Scalar Function
+   - Returns a single value (number, string, date, etc.)
+   - Example:
+   ```sql
+   CREATE FUNCTION dbo.GetFullName(@FirstName VARCHAR(50), @LastName VARCHAR(50))
+   RETURNS VARCHAR(101)
+   AS
+   BEGIN
+       RETURN @FirstName + ' ' + @LastName
+   END;
+   
+   -- Usage
+   SELECT dbo.GetFullName('Ali', 'Khan') AS FullName;
+2. Inline Table-Valued Function (iTVF)
+   - Returns a table.
+   - Essentially a parameterized view.
+   - Usually written as a single SELECT statement.
+   - Example:
+     ```sql
+      CREATE FUNCTION dbo.GetEmployeesByDept(@DeptID INT)
+      RETURNS TABLE
+      AS
+      RETURN
+      (
+          SELECT EmployeeID, Name, Salary
+          FROM Employees
+          WHERE DepartmentID = @DeptID
+      );
+      
+      -- Usage
+      SELECT * FROM dbo.GetEmployeesByDept(2);
+3. Multi-Statement Table-Valued Function (mTVF)
+   - Returns a table variable after performing multiple statements.
+   - Example:
+     ```sql
+      CREATE FUNCTION dbo.GetHighSalaryEmployees(@MinSalary INT)
+      RETURNS @EmpTable TABLE (EmployeeID INT, Name VARCHAR(50), Salary INT)
+      AS
+      BEGIN
+          INSERT INTO @EmpTable
+          SELECT EmployeeID, Name, Salary
+          FROM Employees
+          WHERE Salary >= @MinSalary;
+      
+          RETURN;
+      END;
+      
+      -- Usage
+      SELECT * FROM dbo.GetHighSalaryEmployees(5000);
+
+---
+
+
 
