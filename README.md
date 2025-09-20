@@ -675,3 +675,12 @@ Example: Department-wise total salary but still see each employee:
 | `NTILE(n)`     | Divides rows into n equal groups (like quartiles). |
 
 Example: Ranking employees by salary:
+```sql
+SELECT 
+          EmployeeID, 
+          Salary,
+          ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNum,
+          RANK() OVER (ORDER BY Salary DESC) AS RankNum,
+          DENSE_RANK() OVER (ORDER BY Salary DESC) AS DenseRankNum
+      FROM Employees;
+
