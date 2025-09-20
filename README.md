@@ -11,6 +11,7 @@ Use the links below to jump directly to each answer.
 2. [What are the different categories of datatypes in SQL Server?](#What-are-the-different-categories-of-datatypes-in-SQL-Server?)
 3. [What are Keys in SQL?](#-what-are-keys-in-sql)
 4. [What is Normalization in SQL?](#what-is-normalization-in-sql)
+5. [What is Denormalization, and When is it Used?](#what-is-denormalization-and-when-is-it-used)
 
 ---
 
@@ -339,6 +340,50 @@ It ensures that data is stored efficiently and consistently.
 | Bob      | P1      |
 
 - Now, the original table can be reconstructed by joining the three tables without redundancy.
+
+---
+
+### What is Denormalization, and When is it Used?
+
+**Denormalization** is the process of intentionally introducing redundancy into a database by combining tables or adding duplicate data.  
+It is essentially the opposite of normalization.  
+
+**Purpose / When to Use Denormalization:**
+- **Performance Improvement** → Reduces the need for complex joins and speeds up query execution.  
+- **Reporting and Analytics** → Makes data retrieval faster in read-heavy systems like data warehouses.  
+- **Simpler Queries** → Fewer joins, easier to write and maintain queries.  
+
+**Considerations:**
+- Increases storage requirements due to redundant data.  
+- May require additional effort to maintain data consistency.  
+- Best suited for **read-heavy environments** rather than transactional systems.  
+
+**Example:**
+
+Suppose we have normalized tables:
+
+**Orders Table**
+
+| OrderID | CustomerID | OrderDate |
+|---------|------------|----------|
+| 1       | 101        | 2025-01-10 |
+| 2       | 102        | 2025-01-11 |
+
+**Customers Table**
+
+| CustomerID | CustomerName |
+|------------|--------------|
+| 101        | Alice        |
+| 102        | Bob          |
+
+**Denormalized Table:** Combine both tables for faster reads
+
+| OrderID | CustomerID | CustomerName | OrderDate |
+|---------|------------|--------------|----------|
+| 1       | 101        | Alice        | 2025-01-10 |
+| 2       | 102        | Bob          | 2025-01-11 |
+
+- Now queries can fetch **order and customer info from a single table** without joins.  
 
 ---
 
