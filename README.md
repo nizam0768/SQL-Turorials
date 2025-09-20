@@ -13,7 +13,7 @@ Use the links below to jump directly to each answer.
 4. [What is Normalization in SQL?](#what-is-normalization-in-sql)
 5. [What is Denormalization, and When is it Used?](#what-is-denormalization-and-when-is-it-used)
 6. [What are the Different Operators Available in SQL?](#what-are-the-different-operators-available-in-sql)
-7. [What are Function in SQL?](What-are-Function-in-SQL?)
+7. [What are Function in SQL?](#What-are-Function-in-SQL?)
 
 ---
 
