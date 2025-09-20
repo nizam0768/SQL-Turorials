@@ -16,6 +16,7 @@ Use the links below to jump directly to each answer.
 7. [What are Function in SQL?](#What-are-Function-in-SQL)
 8. [What are Window Functions in SQL?](#What-are-Window-Functions-in-SQL)
 9. [What is store procedure in SQL?](#What-is-store-procedure-in-sql)
+10. [What are View In SQL?](#What-are-View-In-SQL)
 ---
 
 ## ❓ Questions & Answers
@@ -794,9 +795,44 @@ Think of it as a function in programming, but stored in the database, which you 
               SELECT 'Invalid Action' AS Message;
           END
       END;
-
-    
+        
 ---
+
+### What are View In SQL?
+A **View** is a **virtual** table in SQL that is based on the result of a SELECT query.
+- It does not store data physically (except indexed/materialized views).
+- Acts like a table when queried.
+- Can simplify complex queries and enhance security by restricting access to certain columns or rows.
+  **Key Points**:
+
+    1. Virtual Table: Looks like a table, but stores only the query, not the data.
+    2. Simplifies Queries: Complex joins or aggregations can be wrapped in a view.
+    3. Security: You can give access to a view instead of the underlying table.
+    4. Dynamic Data: Always reflects current data in the underlying tables.
+- Example 1: Simple View
+  ```sql
+      CREATE VIEW View_EmployeeNames AS
+      SELECT EmployeeID, Name, DepartmentID
+      FROM Employees;
+- Example 2: View with Join
+  ```sql
+      CREATE VIEW View_EmployeeDept AS
+      SELECT e.EmployeeID, e.Name, d.DepartmentName
+      FROM Employees e
+      JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+- Example 3: View with Aggregation
+  ```sql
+      CREATE VIEW View_DepartmentSalary AS
+      SELECT DepartmentID, SUM(Salary) AS TotalSalary, AVG(Salary) AS AvgSalary
+      FROM Employees
+      GROUP BY DepartmentID;
+**Updating Data Through Views**
+
+   1. You can update, insert, or delete through a view if it is simple enough (single table, no aggregate, no group by).
+   2. For complex views, the view is read-only.
+
+
+
 
 
 
