@@ -14,7 +14,8 @@ Use the links below to jump directly to each answer.
 5. [What is Denormalization, and When is it Used?](#what-is-denormalization-and-when-is-it-used)
 6. [What are the Different Operators Available in SQL?](#what-are-the-different-operators-available-in-sql)
 7. [What are Function in SQL?](#What-are-Function-in-SQL)
-8. [Window Functions in SQL?](#Window-Functions-in-SQL)
+8. [What are Window Functions in SQL?](#What-are-Window-Functions-in-SQL)
+9. [What is store procedure in SQL?](What-is-store-procedure-in-sql)
 ---
 
 ## ❓ Questions & Answers
@@ -634,7 +635,7 @@ A User-Defined Function is a custom function created by a user to encapsulate lo
 
 ---
 
-### Window Functions in SQL?
+### What are Window Functions in SQL
 A Window Function performs a calculation across a set of rows that are related to the current row, without collapsing the result into a single value (unlike aggregate functions).
 
 👉 Think of it as:
@@ -710,6 +711,94 @@ Example: Department-wise total salary but still see each employee:
       FROM Employees;
 
 ---
+
+### What is store procedure in SQL?
+
+A Stored Procedure in SQL is a precompiled set of SQL statements (like `SELECT`, `INSERT`, `UPDATE`, `DELETE`, etc.) that you can save and reuse.
+Think of it as a function in programming, but stored in the database, which you can call whenever needed.
+👉Features of Stored Procedure:
+   - Reusability – Write once, execute many times.
+   - Performance – Precompiled and cached, so faster execution.
+   - Security – Can restrict direct access to tables and only expose procedures.
+   - Maintainability – Easier to manage logic in one place instead of embedding in multiple applications.
+   - Supports Parameters – Accepts input, output, or both.
+        ```sql
+            CREATE PROCEDURE procedure_name
+                @Parameter1 DataType,
+                @Parameter2 DataType OUTPUT
+            AS
+            BEGIN
+                -- SQL statements
+                SELECT * FROM Employees WHERE DepartmentId = @Parameter1;
+            END;
+   - Example 1: Stored Procedure with Output Parameter
+     ```sql
+                CREATE PROCEDURE GetEmployeeCount
+                @DeptId INT,
+                @EmpCount INT OUTPUT
+               AS
+               BEGIN
+                   SELECT @EmpCount = COUNT(*) FROM Employees WHERE DepartmentId = @DeptId;
+               END;
+               DECLARE @Count INT;
+               EXEC GetEmployeeCount @DeptId = 2, @EmpCount = @Count OUTPUT;
+               PRINT @Count;        
+   - Example 2: Stored Procedure to perform CRUD Operation
+     ```sql
+     CREATE PROCEDURE EmployeeCRUD
+    @Action VARCHAR(10),        -- 'CREATE', 'READ', 'UPDATE', 'DELETE'
+    @EmployeeID INT = NULL,     -- Needed for UPDATE & DELETE
+    @Name VARCHAR(50) = NULL,   -- Needed for CREATE & UPDATE
+    @DepartmentID INT = NULL,   -- Needed for CREATE & UPDATE
+    @Salary DECIMAL(10,2) = NULL -- Needed for CREATE & UPDATE
+      AS
+      BEGIN
+      SET NOCOUNT ON;
+
+       IF @Action = 'CREATE'
+       BEGIN
+           INSERT INTO Employees (Name, DepartmentID, Salary)
+           VALUES (@Name, @DepartmentID, @Salary);
+           SELECT 'Employee created successfully' AS Message;
+       END
+   
+       ELSE IF @Action = 'READ'
+       BEGIN
+           IF @EmployeeID IS NOT NULL
+               SELECT * FROM Employees WHERE EmployeeID = @EmployeeID;
+           ELSE
+               SELECT * FROM Employees;
+       END
+   
+       ELSE IF @Action = 'UPDATE'
+       BEGIN
+           UPDATE Employees
+           SET Name = @Name,
+               DepartmentID = @DepartmentID,
+               Salary = @Salary
+           WHERE EmployeeID = @EmployeeID;
+   
+           SELECT 'Employee updated successfully' AS Message;
+       END
+
+       ELSE IF @Action = 'DELETE'
+       BEGIN
+           DELETE FROM Employees
+           WHERE EmployeeID = @EmployeeID;
+   
+           SELECT 'Employee deleted successfully' AS Message;
+       END
+   
+       ELSE
+       BEGIN
+           SELECT 'Invalid Action' AS Message;
+       END
+    END;
+    
+---
+
+
+
 
 
 
