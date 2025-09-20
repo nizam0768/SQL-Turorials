@@ -15,7 +15,7 @@ Use the links below to jump directly to each answer.
 6. [What are the Different Operators Available in SQL?](#what-are-the-different-operators-available-in-sql)
 7. [What are Function in SQL?](#What-are-Function-in-SQL)
 8. [What are Window Functions in SQL?](#What-are-Window-Functions-in-SQL)
-9. [What is store procedure in SQL?](What-is-store-procedure-in-sql)
+9. [What is store procedure in SQL?](#What-is-store-procedure-in-sql)
 ---
 
 ## ❓ Questions & Answers
