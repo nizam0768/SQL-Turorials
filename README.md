@@ -745,55 +745,56 @@ Think of it as a function in programming, but stored in the database, which you 
                PRINT @Count;        
    - Example 2: Stored Procedure to perform CRUD Operation
      ```sql
-     CREATE PROCEDURE EmployeeCRUD
-    @Action VARCHAR(10),        -- 'CREATE', 'READ', 'UPDATE', 'DELETE'
-    @EmployeeID INT = NULL,     -- Needed for UPDATE & DELETE
-    @Name VARCHAR(50) = NULL,   -- Needed for CREATE & UPDATE
-    @DepartmentID INT = NULL,   -- Needed for CREATE & UPDATE
-    @Salary DECIMAL(10,2) = NULL -- Needed for CREATE & UPDATE
+          CREATE PROCEDURE EmployeeCRUD
+          @Action VARCHAR(10),        -- 'CREATE', 'READ', 'UPDATE', 'DELETE'
+          @EmployeeID INT = NULL,     -- Needed for UPDATE & DELETE
+          @Name VARCHAR(50) = NULL,   -- Needed for CREATE & UPDATE
+          @DepartmentID INT = NULL,   -- Needed for CREATE & UPDATE
+          @Salary DECIMAL(10,2) = NULL -- Needed for CREATE & UPDATE
       AS
       BEGIN
-      SET NOCOUNT ON;
+          SET NOCOUNT ON;
+      
+          IF @Action = 'CREATE'
+          BEGIN
+              INSERT INTO Employees (Name, DepartmentID, Salary)
+              VALUES (@Name, @DepartmentID, @Salary);
+              SELECT 'Employee created successfully' AS Message;
+          END
+      
+          ELSE IF @Action = 'READ'
+          BEGIN
+              IF @EmployeeID IS NOT NULL
+                  SELECT * FROM Employees WHERE EmployeeID = @EmployeeID;
+              ELSE
+                  SELECT * FROM Employees;
+          END
+      
+          ELSE IF @Action = 'UPDATE'
+          BEGIN
+              UPDATE Employees
+              SET Name = @Name,
+                  DepartmentID = @DepartmentID,
+                  Salary = @Salary
+              WHERE EmployeeID = @EmployeeID;
+      
+              SELECT 'Employee updated successfully' AS Message;
+          END
+      
+          ELSE IF @Action = 'DELETE'
+          BEGIN
+              DELETE FROM Employees
+              WHERE EmployeeID = @EmployeeID;
+      
+              SELECT 'Employee deleted successfully' AS Message;
+          END
+      
+          ELSE
+          BEGIN
+              SELECT 'Invalid Action' AS Message;
+          END
+      END;
 
-       IF @Action = 'CREATE'
-       BEGIN
-           INSERT INTO Employees (Name, DepartmentID, Salary)
-           VALUES (@Name, @DepartmentID, @Salary);
-           SELECT 'Employee created successfully' AS Message;
-       END
-   
-       ELSE IF @Action = 'READ'
-       BEGIN
-           IF @EmployeeID IS NOT NULL
-               SELECT * FROM Employees WHERE EmployeeID = @EmployeeID;
-           ELSE
-               SELECT * FROM Employees;
-       END
-   
-       ELSE IF @Action = 'UPDATE'
-       BEGIN
-           UPDATE Employees
-           SET Name = @Name,
-               DepartmentID = @DepartmentID,
-               Salary = @Salary
-           WHERE EmployeeID = @EmployeeID;
-   
-           SELECT 'Employee updated successfully' AS Message;
-       END
-
-       ELSE IF @Action = 'DELETE'
-       BEGIN
-           DELETE FROM Employees
-           WHERE EmployeeID = @EmployeeID;
-   
-           SELECT 'Employee deleted successfully' AS Message;
-       END
-   
-       ELSE
-       BEGIN
-           SELECT 'Invalid Action' AS Message;
-       END
-    END;
     
 ---
 
