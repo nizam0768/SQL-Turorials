@@ -16,10 +16,10 @@ Use the links below to jump directly to each answer.
 
 SQL commands are broadly classified into:
 
-DDL (**Data Definition Language**): `CREATE`, `ALTER`, `DROP`, `TRUNCATE`.
-DML (**Data Manipulation Language**): `SELECT`, `INSERT`, `UPDATE`, `DELETE`.
-DCL (**Data Control Language**): `GRANT`, `REVOKE`.
-TCL (**Transaction Control Language**): `COMMIT`, `ROLLBACK`, `SAVEPOINT`.
+- **DDL** (**Data Definition Language**): `CREATE`, `ALTER`, `DROP`, `TRUNCATE`.
+- **DML** (**Data Manipulation Language**): `SELECT`, `INSERT`, `UPDATE`, `DELETE`.
+- **DCL** (**Data Control Language**): `GRANT`, `REVOKE`.
+- **TCL** (**Transaction Control Language**): `COMMIT`, `ROLLBACK`, `SAVEPOINT`.
 
 ---
 
