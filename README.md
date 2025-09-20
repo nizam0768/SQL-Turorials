@@ -667,20 +667,49 @@ Example: Department-wise total salary but still see each employee:
 
 2. Ranking Functions
    
-| Function       | Description                                    |
-|----------------|------------------------------------------------|
-| `ROW_NUMBER()` | Assigns unique sequential number.              |
-| `RANK()`       | Gives rank, leaves gaps if ties.               |
-| `DENSE_RANK()` | Rank without gaps for ties.                    |
-| `NTILE(n)`     | Divides rows into n equal groups (like quartiles). |
+   | Function       | Description                                    |
+   |----------------|------------------------------------------------|
+   | `ROW_NUMBER()` | Assigns unique sequential number.              |
+   | `RANK()`       | Gives rank, leaves gaps if ties.               |
+   | `DENSE_RANK()` | Rank without gaps for ties.                    |
+   | `NTILE(n)`     | Divides rows into n equal groups (like quartiles). |
 
-Example: Ranking employees by salary:
-```sql
-SELECT 
+   Example: Ranking employees by salary:
+   ```sql
+   SELECT 
+             EmployeeID, 
+             Salary,
+             ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNum,
+             RANK() OVER (ORDER BY Salary DESC) AS RankNum,
+             DENSE_RANK() OVER (ORDER BY Salary DESC) AS DenseRankNum
+         FROM Employees;
+3. Value Window Functions
+   | Function       | Description                           |
+   |----------------|---------------------------------------|
+   | `LAG(column, n)`   | Gets value from n rows before current. |
+   | `LEAD(column, n)`  | Gets value from n rows after current.  |
+   | `FIRST_VALUE()`    | Returns first value in partition.      |
+   | `LAST_VALUE()`     | Returns last value in partition.       |
+
+   Example: Compare each employee’s salary with the previous employee:
+   ```sql
+   SELECT 
           EmployeeID, 
           Salary,
-          ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNum,
-          RANK() OVER (ORDER BY Salary DESC) AS RankNum,
-          DENSE_RANK() OVER (ORDER BY Salary DESC) AS DenseRankNum
+          LAG(Salary,1) OVER (ORDER BY Salary) AS PrevSalary,
+          LEAD(Salary,1) OVER (ORDER BY Salary) AS NextSalary
       FROM Employees;
+4. Analytic Functions with Frames
+   You can calculate moving totals/averages using ROWS BETWEEN.
+   Example: 3-month moving average salary:
+   ```sql
+   SELECT 
+          EmployeeID, 
+          Salary,
+          AVG(Salary) OVER (ORDER BY HireDate ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS MovingAvg
+      FROM Employees;
+
+---
+
+
 
