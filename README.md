@@ -9,6 +9,7 @@ Use the links below to jump directly to each answer.
 
 1. [What are the main types of SQL commands?](#What-are-the-main-types-of-SQL-commands?)
 2. [What are the different categories of datatypes in SQL Server?](#What-are-the-different-categories-of-datatypes-in-SQL-Server?)
+3. [What are Keys in SQL?](#-what-are-keys-in-sql)
 ---
 
 ## ❓ Questions & Answers
@@ -98,3 +99,69 @@ SQL commands are broadly classified into:
 
 ---
 
+### 🔑 What are Keys in SQL?
+A **Key** is a column (or combination of columns) in a table that is used to uniquely identify rows or establish relationships between tables.  
+
+Keys help with:
+- **Uniqueness** → No duplicate rows where not allowed.  
+- **Relationships** → Linking tables together.  
+- **Data Integrity** → Enforcing valid, consistent data.  
+
+---
+
+#### 🔹 Types of Keys in SQL
+
+1. **Primary Key**
+   - Uniquely identifies each record in a table.  
+   - Cannot contain `NULL` values.  
+   - Only one primary key per table.  
+
+   ```sql
+   CREATE TABLE Employees (
+       EmpID INT PRIMARY KEY,
+       Name VARCHAR(100),
+       Salary DECIMAL(10,2)
+   );
+2. **Foreign Key**
+   - Establishes a relationship between two tables.
+   - Refers to the Primary Key of another table.
+   - Ensures referential integrity (you cannot insert a value that doesn’t exist in the parent table).
+   - Example:
+     ```sql
+     CREATE TABLE Orders (
+     OrderID INT PRIMARY KEY,
+     EmpID INT FOREIGN KEY REFERENCES Employees(EmpID)
+     );
+3. **Candidate Key**
+   - Columns that can qualify as a Primary Key.
+   - A table can have multiple candidate keys, but only one is chosen as the Primary Key.
+   - Example:
+      - In `Employees`, both `EmpID` and `Email` could be unique → candidate keys.
+4. **Alternate Key**
+   - A Candidate Key that was not chosen as the Primary Key.
+   - Example: If `EmpID` is `Primary Key`, then Email becomes an Alternate Key.
+5. **Composite Key**
+   - A key made of two or more columns.
+   - Useful when a single column cannot uniquely identify a row.
+   - Example:
+     ```sql
+     CREATE TABLE CourseRegistrations (
+     StudentID INT,
+     CourseID INT,
+     PRIMARY KEY (StudentID, CourseID)
+     );
+6. **Unique Key**
+   - Ensures that all values in a column are unique.
+   - Unlike Primary Key, it allows one NULL (depending on DBMS).
+   - Example:
+     ```sql
+     CREATE TABLE Users (
+     UserID INT PRIMARY KEY,
+     Email VARCHAR(100) UNIQUE
+     );
+7. **Super Key**
+   - A set of one or more columns that can uniquely identify a record.
+   - Every Candidate Key is a Super Key, but not every Super Key is minimal.
+   - Example: `(EmpID, Name)` is a Super Key, but only `EmpID` is minimal → Candidate Key.
+
+---
