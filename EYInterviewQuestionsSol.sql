@@ -9,3 +9,19 @@ WHERE b.billing_date BETWEEN DATEADD(year, -1, GETDATE()) AND GETDATE()
 GROUP BY c.client_name
 ORDER BY total_billed DESC
 OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY;
+
+GO
+
+-- 2nd Largest Salary
+
+--Approch 1
+Select Max(salary) from employees 
+	where salary < (select Max(salary) from employees)
+Go
+
+--Approch 2
+Select * from 
+	(Select *,
+	DENSE_RANK() Over (Order by salary DESC) AS salary_rank 
+	from employees) ranked 
+	Where salary_rank = 2
