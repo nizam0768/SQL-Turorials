@@ -133,3 +133,79 @@ INSERT INTO employees (emp_id, emp_name, salary) VALUES
 (9, 'Isla Nash', 75000.00),
 (10, 'John Cruz', 47000.00);
 
+GO
+
+CREATE TABLE sectors (
+    company_id CHAR(2) PRIMARY KEY,
+    sector VARCHAR(50)
+);
+
+INSERT INTO sectors (company_id, sector) VALUES
+('01', 'Technology'),
+('02', 'Healthcare'),
+('03', 'Technology'),
+('04', 'Finance'),
+('05', 'Retail'),
+('06', 'Manufacturing'),
+('07', 'Energy'),
+('08', 'Pharma'),
+('09', 'Telecom'),
+('10', 'Automotive');
+
+CREATE TABLE transactions (
+    transaction_id INT PRIMARY KEY,
+    company_id CHAR(2),
+    transaction_date DATE,
+    revenue DECIMAL(12,2),
+    FOREIGN KEY (company_id) REFERENCES sectors(company_id)
+);
+
+INSERT INTO transactions (transaction_id, company_id, transaction_date, revenue) VALUES
+(101, '01', '2020-01-15', 5000.00),
+(102, '02', '2020-01-20', 8500.00),
+(103, '01', '2020-02-10', 4500.00),
+(104, '03', '2020-02-20', 9900.00),
+(105, '02', '2020-02-25', 7500.00),
+(106, '04', '2020-03-01', 6200.00),
+(107, '05', '2020-03-05', 8100.00),
+(108, '06', '2020-03-10', 7000.00),
+(109, '07', '2020-03-15', 9200.00),
+(110, '08', '2020-03-20', 11000.00);
+
+GO
+
+CREATE TABLE projects (
+    project_id INT PRIMARY KEY,
+    client_id INT,
+    project_name VARCHAR(100),
+    project_start_date DATE,
+    project_end_date DATE
+);
+
+INSERT INTO projects (project_id, client_id, project_name, project_start_date, project_end_date) VALUES
+(1, 101, 'Project A', '2019-01-01', '2019-06-01'),
+(2, 102, 'Project B', '2019-05-01', '2019-11-01'),
+(3, 103, 'Project C', '2019-10-01', '2020-03-01'),
+(4, 101, 'Project D', '2020-01-15', '2020-06-15'),
+(5, 104, 'Project E', '2020-04-01', '2020-10-01');
+
+
+CREATE TABLE billing (
+    billing_id INT PRIMARY KEY,
+    project_id INT,
+    billing_date DATE,
+    billing_amount DECIMAL(12, 2),
+    FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+INSERT INTO billing (billing_id, project_id, billing_date, billing_amount) VALUES
+(1, 1, '2019-02-01', 5000.00),
+(2, 1, '2019-05-01', 5000.00),
+(3, 2, '2019-06-01', 4000.00),
+(4, 2, '2019-08-01', 4000.00),
+(5, 3, '2019-12-01', 6000.00),
+(6, 3, '2020-01-15', 7500.00),
+(7, 4, '2020-02-01', 8000.00),
+(8, 4, '2020-04-01', 9000.00),
+(9, 5, '2020-05-01', 7000.00),
+(10, 5, '2020-09-01', 8500.00);
