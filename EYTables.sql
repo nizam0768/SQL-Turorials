@@ -113,3 +113,23 @@ INSERT INTO billings (bill_id, client_id, billing_date, amount) VALUES
 (274, 119, '2024-06-16', 12169.00),
 (275, 119, '2024-03-16', 28049.00);
 
+Go
+
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(100),
+    salary DECIMAL(10,2)
+);
+
+INSERT INTO employees (emp_id, emp_name, salary) VALUES
+(1, 'Alice Johnson', 60000.00),
+(2, 'Brian Smith', 55000.00),
+(3, 'Cathy Lee', 72000.00),
+(4, 'David Kumar', 80000.00),
+(5, 'Eva Green', 50000.00),
+(6, 'Frank Wright', 65000.00),
+(7, 'Gina Patel', 58000.00),
+(8, 'Harry Chen', 90000.00),
+(9, 'Isla Nash', 75000.00),
+(10, 'John Cruz', 47000.00);
+
