@@ -847,19 +847,20 @@ The MERGE statement in SQL Server is a powerful command that allows you to perfo
   - **WHEN NOT MATCHED BY TARGET:** Executes an INSERT for rows in the source not found in the target.
   - **WHEN NOT MATCHED BY SOURCE:** Executes a DELETE for rows in the target not found in the source.
 
-### Example Syntax
+   ### Example Syntax
     ```sql
-      MERGE target_table AS target
-      USING source_table AS source
-      ON target.id = source.id
-      WHEN MATCHED THEN
-          UPDATE SET target.col1 = source.col1,
-                     target.col2 = source.col2
-      WHEN NOT MATCHED BY TARGET THEN
-          INSERT (col1, col2)
-          VALUES (source.col1, source.col2)
-      WHEN NOT MATCHED BY SOURCE THEN
-          DELETE;
+            MERGE target_table AS target
+            USING source_table AS source
+            ON target.id = source.id
+            WHEN MATCHED THEN
+                UPDATE SET target.col1 = source.col1,
+                           target.col2 = source.col2
+            WHEN NOT MATCHED BY TARGET THEN
+                INSERT (col1, col2)
+                VALUES (source.col1, source.col2)
+            WHEN NOT MATCHED BY SOURCE THEN
+                DELETE;
+
 **Common Use Cases**
 - Data warehouse updates (e.g., Slowly Changing Dimensions)
 - Synchronizing staging and operational tables
