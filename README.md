@@ -17,6 +17,7 @@ Use the links below to jump directly to each answer.
 8. [What are Window Functions in SQL?](#What-are-Window-Functions-in-SQL)
 9. [What is store procedure in SQL?](#What-is-store-procedure-in-sql)
 10. [What are View In SQL?](#What-are-View-In-SQL)
+11. [What is MERGE in SQL Server?](#What-is-MERGE-in-SQL-Server)
 ---
 
 ## ❓ Questions & Answers
@@ -830,6 +831,41 @@ A **View** is a **virtual** table in SQL that is based on the result of a SELECT
 
    1. You can update, insert, or delete through a view if it is simple enough (single table, no aggregate, no group by).
    2. For complex views, the view is read-only.
+
+---
+
+### What is MERGE in SQL Server?
+ 
+The MERGE statement in SQL Server is a powerful command that allows you to perform INSERT, UPDATE, and DELETE operations on a target table based on the results of a join with a source table, all within a single statement. This is especially useful for synchronizing two tables or processing complex data modifications in a single operation.
+
+### Key Points about MERGE in SQL Server
+
+- **Combines Operations:** MERGE consolidates separate INSERT, UPDATE, and DELETE operations into one atomic query, improving performance and simplifying code logic.
+- **Source and Target Tables:** You typically compare a "source" table (the data you want to use for changes) and a "target" table (the table you want to modify).
+- **Action Clauses:**
+  - **WHEN MATCHED:** Executes an UPDATE on target rows that match source rows based on a key condition.
+  - **WHEN NOT MATCHED BY TARGET:** Executes an INSERT for rows in the source not found in the target.
+  - **WHEN NOT MATCHED BY SOURCE:** Executes a DELETE for rows in the target not found in the source.
+
+### Example Syntax
+    ```sql
+      MERGE target_table AS target
+      USING source_table AS source
+      ON target.id = source.id
+      WHEN MATCHED THEN
+          UPDATE SET target.col1 = source.col1,
+                     target.col2 = source.col2
+      WHEN NOT MATCHED BY TARGET THEN
+          INSERT (col1, col2)
+          VALUES (source.col1, source.col2)
+      WHEN NOT MATCHED BY SOURCE THEN
+          DELETE;
+**Common Use Cases**
+- Data warehouse updates (e.g., Slowly Changing Dimensions)
+- Synchronizing staging and operational tables
+- Condensing multiple data operations for efficiency
+- The MERGE statement provides transactional safety and can lead to both clearer code and improved performance when table synchronization is needed in SQL Server.
+
 
 
 
