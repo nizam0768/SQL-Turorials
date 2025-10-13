@@ -18,6 +18,7 @@ Use the links below to jump directly to each answer.
 9. [What is store procedure in SQL?](#What-is-store-procedure-in-sql)
 10. [What are View In SQL?](#What-are-View-In-SQL)
 11. [What is MERGE in SQL Server?](#What-is-MERGE-in-SQL-Server)
+12. [Enhance SQL Server Stored Procedure Performance Tuning Tips?](#Enhance-SQL-Server-Stored-Procedure-Performance–Tuning-Tips)
 ---
 
 ## ❓ Questions & Answers
@@ -866,6 +867,185 @@ The MERGE statement in SQL Server is a powerful command that allows you to perfo
 - Synchronizing staging and operational tables
 - Condensing multiple data operations for efficiency
 - The MERGE statement provides transactional safety and can lead to both clearer code and improved performance when table synchronization is needed in SQL Server.
+
+---
+
+### Enhance SQL Server Stored Procedure Performance Tuning Tips?
+
+🚀 1. Optimize Query Logic
+✅ **Avoid SELECT ***
+
+Always specify only the required columns.
+    ```sql
+    
+       -- Bad
+       SELECT * FROM Employees;
+       
+      -- Good
+      SELECT EmployeeID, Name, Department FROM Employees;
+
+✅ Benefits: Reduces I/O, memory, and network load.
+✅ Use Proper Filtering (WHERE clause)
+Filter data early to minimize the result set.
+    ```sql
+
+     SELECT * FROM Orders WHERE OrderDate >= '2025-01-01';
+Avoid fetching unnecessary rows and filtering later in the app.
+
+✅ Avoid Cursors
+Use set-based operations instead of row-by-row processing.
+    ```sql
+    
+      -- Bad: Cursor processing
+      DECLARE cur CURSOR FOR SELECT EmployeeID FROM Employees;
+      -- ...
+      
+      -- Good: Set-based
+      UPDATE Employees SET Salary = Salary * 1.10 WHERE DepartmentID = 3;
+✅ Set-based logic is faster and more scalable.
+
+⚙️ 2. Use Proper Indexing
+
+✅ Check Missing Indexes
+Use the SQL Server Missing Index DMV:
+     ```sql
+      SELECT * 
+      FROM sys.dm_db_missing_index_details;
+
+✅ Create Indexes on WHERE, JOIN, and ORDER BY columns
+    ```sql
+    
+      CREATE INDEX IX_Orders_OrderDate ON Orders(OrderDate);
+      
+⚠️ Avoid Over-Indexing:
+
+Too many indexes slow down INSERT, UPDATE, and DELETE operations.
+
+📊 3. Use Execution Plans
+
+Check the Actual Execution Plan in SSMS (Ctrl + M before running the query).
+-Look for:
+
+ - Table Scans → may need indexes
+ - Key Lookups → consider INCLUDE columns
+ - Sort or Hash Match → may optimize joins
+
+🧮 4. Use Appropriate JOINs
+
+- Prefer INNER JOIN over OUTER JOIN if possible.
+- Ensure both sides of the join are indexed on join keys.
+
+  ```sql
+     SELECT e.Name, d.DepartmentName 
+      FROM Employees e
+      INNER JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+  
+🧠 5. Parameter Sniffing Issues
+SQL Server caches execution plans for parameters — sometimes this causes performance issues.
+🔧 Fix: Use OPTION (RECOMPILE) or local variables 
+    ```sql
+    
+      CREATE PROCEDURE GetOrders (@CustomerId INT)
+      AS
+      BEGIN
+          DECLARE @cid INT = @CustomerId;
+          SELECT * FROM Orders WHERE CustomerId = @cid;
+      END;
+      -- OR
+     SELECT * FROM Orders WHERE CustomerId = @CustomerId
+     OPTION (RECOMPILE);
+
+💾 6. Avoid Scalar Functions in SELECT
+Scalar functions in SELECT cause row-by-row evaluation.
+    ```sql
+    
+      -- Bad
+      SELECT dbo.GetTaxAmount(OrderID) FROM Orders;
+      
+      -- Better
+      -- Inline the logic or use CROSS APPLY for performance
+⚡ 7. Use Table Variables and Temp Tables Wisely
+
+- Small datasets: use @tableVariable
+- Large datasets: use #tempTable (can be indexed)
+
+   ```sql
+   DECLARE @Temp TABLE (Id INT, Name NVARCHAR(50));
+   INSERT INTO @Temp SELECT Id, Name FROM Employees;
+
+📦 8. Optimize Transactions
+
+- Keep transactions short and specific.
+- Avoid unnecessary locking by minimizing the duration of open transactions.
+- Use proper isolation levels (e.g., READ COMMITTED).
+
+🧰 9. Update Statistics & Rebuild Indexes
+    ```sql
+    
+      -- Update statistics
+      EXEC sp_updatestats;
+      
+      -- Rebuild fragmented indexes
+      ALTER INDEX ALL ON Employees REBUILD;
+Ensures the optimizer has up-to-date data for generating efficient plans.
+
+⏱ 10. Avoid Implicit Conversions
+
+Ensure column and parameter data types match:
+    ```sql
+    
+      -- Bad: CustomerId is INT but parameter is VARCHAR
+      WHERE CustomerId = @CustomerId
+      
+      -- Good
+      WHERE CustomerId = CAST(@CustomerId AS INT)
+
+Implicit conversions cause index scans instead of seeks.
+
+🧩 11. Optimize ORDER BY and GROUP BY
+
+- Only use them when needed.
+- Ensure columns used are indexed if sorting/grouping large datasets.
+
+🧠 12. Use Query Hints Cautiously
+
+Only after full testing:
+    ```sql
+    
+     SELECT * FROM Orders WITH (NOLOCK);
+NOLOCK avoids blocking but can cause dirty reads.
+
+🧾 13. Review Stored Procedure Caching
+
+If your stored procedure logic changes drastically between executions, use:
+    ```sql
+    
+      EXEC sp_recompile 'ProcedureName';
+
+🧮 14. Break Complex Procedures
+Split large procedures into smaller ones to reduce recompilation time and improve readability and maintainability.
+
+🧩 15. Monitor and Measure
+
+Use these tools:
+
+- SQL Profiler or Extended Events
+- sys.dm_exec_query_stats
+- SET STATISTICS IO ON
+- SET STATISTICS TIME ON
+
+## ⚙️ **Optimization Summary**
+
+| 🧩 **Optimization Area** | 💡 **Key Tip** | 🚀 **Benefit** |
+|---------------------------|----------------|----------------|
+| **Query Design** | Avoid `SELECT *` | Reduces I/O |
+| **Indexing** | Create indexes on filter columns | Faster lookups |
+| **Joins** | Use indexed columns | Efficient joins |
+| **Parameter Sniffing** | Use `OPTION (RECOMPILE)` or local variables | Stable performance |
+| **Stats & Indexes** | Update statistics regularly | Better execution plans |
+| **Transactions** | Keep transactions short | Prevent blocking |
+| **Monitoring** | Use execution plans & DMVs | Identify bottlenecks |
+
 
 
 
