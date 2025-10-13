@@ -18,7 +18,7 @@ Use the links below to jump directly to each answer.
 9. [What is store procedure in SQL?](#What-is-store-procedure-in-sql)
 10. [What are View In SQL?](#What-are-View-In-SQL)
 11. [What is MERGE in SQL Server?](#What-is-MERGE-in-SQL-Server)
-12. [Enhance SQL Server Stored Procedure Performance Tuning Tips?](#Enhance-SQL-Server-Stored-Procedure-Performance–Tuning-Tips)
+12. [Enhance SQL Server Stored Procedure Performance Tuning Tips](#Enhance-SQL-Server-Stored-Procedure-Performance–Tuning-Tips)
 ---
 
 ## ❓ Questions & Answers
@@ -870,7 +870,7 @@ The MERGE statement in SQL Server is a powerful command that allows you to perfo
 
 ---
 
-### Enhance SQL Server Stored Procedure Performance Tuning Tips?
+### Enhance SQL Server Stored Procedure Performance Tuning Tips
 
 🚀 1. Optimize Query Logic
 ✅ **Avoid SELECT ***
